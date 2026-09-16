@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #0f131c;
+  font-family: "Geist", sans-serif;
+}
+
+h1,
+h2,
+h3,p {
+  font-family: "Space Grotesk", sans-serif;
+}
+
+code,
+pre,
+.font-mono {
+  font-family: "JetBrains Mono", monospace;
+}
+
+::selection {
+  background: #10b981;
+  color: #002113;
+}
