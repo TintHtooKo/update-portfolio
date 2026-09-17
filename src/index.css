@@ -5,19 +5,25 @@ html {
 }
 
 html,
-body {
+body,
+#root {
   margin: 0;
   padding: 0;
+  min-height: 100%;
+  width: 100%;
 }
 
 body {
   background: #0f131c;
   font-family: "Geist", sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 h1,
 h2,
-h3,p {
+h3,
+p {
   font-family: "Space Grotesk", sans-serif;
 }
 
@@ -25,6 +31,22 @@ code,
 pre,
 .font-mono {
   font-family: "JetBrains Mono", monospace;
+}
+
+.material-symbols-outlined {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 1em;
+  overflow: hidden;
+  direction: ltr;
+  font-family: "Material Symbols Outlined";
+  font-feature-settings: "liga";
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: none;
+  white-space: nowrap;
 }
 
 ::selection {

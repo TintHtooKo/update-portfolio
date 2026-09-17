@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { toast } from "react-toastify";
 
 type CodeTab = "laravel" | "typescript";
@@ -202,7 +202,7 @@ function Header() {
   return (
     <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/5 bg-[#0f131c]/85 backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-4 md:px-6">
-        <a href="#overview" className="flex items-center gap-3">
+        <div onClick={scrollToTop} className="flex items-center gap-3 cursor-pointer">
           <img
             src="/logo.png"
             alt="Tint Htoo Ko"
@@ -229,7 +229,7 @@ function Header() {
               </span>
             </div>
           </div>
-        </a>
+        </div>
 
         <nav className="hidden items-center gap-1 rounded-xl bg-[#0a0e17]/80 p-1 lg:flex">
           <div
@@ -290,9 +290,9 @@ function Header() {
 function Hero() {
   return (
     <section
-      className="relative mx-auto w-full max-w-7xl px-4 pb-16 pt-10 md:px-6"
+      className="relative mx-auto w-full max-w-7xl overflow-hidden px-4 pb-16 pt-10 md:px-6"
     >
-      <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-90 w-180 -translate-x-1/2 rounded-full bg-[#10b981]/10 blur-3xl" />
+      <div className="pointer-events-none absolute -top-40 left-1/2 -z-10 h-56 w-[calc(100vw-2rem)] max-w-180 -translate-x-1/2 rounded-full bg-[#10b981]/10 blur-3xl md:h-90" />
 
       <div className="mb-6 flex flex-wrap items-center gap-2">
         <div className="inline-flex items-center gap-2 rounded-full bg-[#262a34] px-3 py-1">
@@ -808,21 +808,21 @@ function CodeInspection() {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-xl bg-[#0a0e17] shadow-2xl">
-          <div className="flex items-center justify-between bg-[#1c1f29] px-4 py-3">
-            <div className="flex items-center gap-2">
+        <div className="min-w-0 overflow-hidden rounded-xl bg-[#0a0e17] shadow-2xl">
+          <div className="flex items-center justify-between gap-3 bg-[#1c1f29] px-4 py-3">
+            <div className="flex min-w-0 items-center gap-2">
               <span className="h-3 w-3 rounded-full bg-[#ffb4ab]" />
               <span className="h-3 w-3 rounded-full bg-[#4edea3]/40" />
               <span className="h-3 w-3 rounded-full bg-[#4edea3]" />
 
-              <span className="ml-2 font-mono text-xs text-[#86948a]">
+              <span className="ml-2 min-w-0 truncate font-mono text-[10px] text-[#86948a] sm:text-xs">
                 {tab === "laravel"
-                  ? "app/Http/Controllers/HR/EmployeeController.php"
-                  : "src/services/api/employeeClient.ts"}
+                  ? "app/Http/Controllers/HR/ActivityController.php"
+                  : "src/services/api/activityClient.ts"}
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="hidden shrink-0 items-center gap-2 sm:flex">
               <span className="h-2 w-2 animate-pulse rounded-full bg-[#4edea3]" />
 
               <span className="font-mono text-[9px] uppercase text-[#4edea3]">
@@ -831,7 +831,7 @@ function CodeInspection() {
             </div>
           </div>
 
-          <div className="max-h-120 overflow-x-auto overflow-y-scroll p-6 font-mono text-xs leading-7 text-[#dfe2ef]"
+          <div className="max-h-120 overflow-x-auto overflow-y-scroll p-4 font-mono text-xs leading-7 text-[#dfe2ef] sm:p-6"
           style={{
             scrollbarWidth: 'thin',
             scrollbarColor: "#4edea3 #111620",
@@ -853,199 +853,272 @@ function LaravelCode() {
   return (
     <pre>
       <code>
-        {/* Comment */}
         <span className="text-[#86948a]">
-          // Production HR API — tenant scoped, authorized, validated & paginated
+          // Production HR API — Activity tracking & team completion
         </span>
         {"\n\n"}
 
-        {/* Namespace */}
         <span className="text-[#4cd7f6]">namespace</span>{" "}
-        App\Http\Controllers\HR;
+        App\Http\Controllers\Api;
         {"\n\n"}
 
-        {/* Imports */}
         <span className="text-[#4cd7f6]">use</span>{" "}
         App\Http\Controllers\Controller;
         {"\n"}
         <span className="text-[#4cd7f6]">use</span>{" "}
-        App\Http\Requests\HR\EmployeeIndexRequest;
+        Illuminate\Http\Request;
         {"\n"}
         <span className="text-[#4cd7f6]">use</span>{" "}
-        App\Http\Requests\HR\EmployeeUpdateRequest;
-        {"\n"}
-        <span className="text-[#4cd7f6]">use</span>{" "}
-        App\Http\Resources\HR\EmployeeResource;
-        {"\n"}
-        <span className="text-[#4cd7f6]">use</span>{" "}
-        App\Models\Employee;
-        {"\n"}
-        <span className="text-[#4cd7f6]">use</span>{" "}
-        Illuminate\Http\JsonResponse;
+        Illuminate\Support\Facades\Auth;
         {"\n"}
         <span className="text-[#4cd7f6]">use</span>{" "}
         Illuminate\Support\Facades\DB;
+        {"\n"}
+        <span className="text-[#4cd7f6]">use</span>{" "}
+        Illuminate\Support\Facades\Validator;
+        {"\n"}
+        <span className="text-[#4cd7f6]">use</span>{" "}
+        Carbon\Carbon;
+        {"\n"}
+        <span className="text-[#4cd7f6]">use</span>{" "}
+        App\Models\Activity;
+        {"\n"}
+        <span className="text-[#4cd7f6]">use</span>{" "}
+        App\Models\ActivityLocation;
+        {"\n"}
+        <span className="text-[#4cd7f6]">use</span>{" "}
+        App\Models\EmployeeActivity;
         {"\n\n"}
 
-        {/* Class */}
         <span className="text-[#4cd7f6]">class</span>{" "}
-        <span className="text-[#4edea3]">EmployeeController</span>{" "}
+        <span className="text-[#4edea3]">AdminController</span>{" "}
         <span className="text-[#4cd7f6]">extends</span> Controller {"{"}
         {"\n\n"}
 
-        {/* Index method */}
         {"  "}
         <span className="text-[#4cd7f6]">public function</span>{" "}
-        <span className="text-[#4edea3]">index</span>(
-        EmployeeIndexRequest $request): JsonResponse {"{"}
-        {"\n"}
-
-        {"    "}
-        <span className="text-[#86948a]">
-          // Resolve current authenticated tenant
-        </span>
-        {"\n"}
-
-        {"    "}$tenantId = $request-&gt;user()-&gt;tenant_id;
+        <span className="text-[#4edea3]">addActivityLocation</span>(
+        Request $request
+        ) {"{"}
         {"\n\n"}
 
         {"    "}
         <span className="text-[#86948a]">
-          // Build optimized employee query
+          // Validate activity request
         </span>
         {"\n"}
 
-        {"    "}$employees = Employee::query()
-        {"\n"}
-
-        {"      "}-&gt;where(
-        <span className="text-[#c0c1ff]">'tenant_id'</span>,
-        $tenantId
-        )
-        {"\n"}
-
-        {"      "}-&gt;with([
-        <span className="text-[#c0c1ff]">'department:id,name'</span>,
-        ])
-        {"\n"}
-
-        {"      "}-&gt;when(
-        $request-&gt;search,
-        <span className="text-[#4cd7f6]">function</span> ($query, $search) {"{"}
-        {"\n"}
-
-        {"        "}$query-&gt;where(
-        <span className="text-[#4cd7f6]">function</span> ($q){" "}
-        <span className="text-[#4cd7f6]">use</span> ($search) {"{"}
-        {"\n"}
-
-        {"          "}$q-&gt;where(
-        <span className="text-[#c0c1ff]">'name'</span>,
-        <span className="text-[#c0c1ff]">'like'</span>,
-        <span className="text-[#c0c1ff]">
-          "%{"{"}$search{"}"}%"
-        </span>
-        )
-        {"\n"}
-
-        {"            "}-&gt;orWhere(
-        <span className="text-[#c0c1ff]">'email'</span>,
-        <span className="text-[#c0c1ff]">'like'</span>,
-        <span className="text-[#c0c1ff]">
-          "%{"{"}$search{"}"}%"
-        </span>
-        );
-        {"\n"}
-
-        {"        "}
-        {"}"});
+        {"    "}$validate = Validator::make(
+        $request-&gt;all(),
+        [
         {"\n"}
 
         {"      "}
-        {"}"})
+        <span className="text-[#c0c1ff]">'location'</span> =&gt;{" "}
+        <span className="text-[#c0c1ff]">'required|string|max:255'</span>,
         {"\n"}
 
-        {"      "}-&gt;when(
-        $request-&gt;department_id,
-        <span className="text-[#4cd7f6]">fn</span> ($q) =&gt;
-        $q-&gt;where(
-        <span className="text-[#c0c1ff]">'department_id'</span>,
-        $request-&gt;department_id
-        )
-        )
+        {"      "}
+        <span className="text-[#c0c1ff]">'activityId'</span> =&gt;{" "}
+        <span className="text-[#c0c1ff]">
+          'required|integer|exists:activities,id'
+        </span>
+        ,
         {"\n"}
 
-        {"      "}-&gt;latest(
-        <span className="text-[#c0c1ff]">'created_at'</span>
-        )
-        {"\n"}
-
-        {"      "}-&gt;paginate(
-        $request-&gt;integer(
-        <span className="text-[#c0c1ff]">'per_page'</span>,
-        20
-        )
-        );
+        {"    "}]);
         {"\n\n"}
 
         {"    "}
+        <span className="text-[#4cd7f6]">if</span>{" "}
+        ($validate-&gt;fails()) {"{"}
+        {"\n"}
+
+        {"      "}
         <span className="text-[#4cd7f6]">return</span>{" "}
-        EmployeeResource::collection($employees)
+        response()-&gt;json([
         {"\n"}
 
-        {"      "}-&gt;response();
+        {"        "}
+        <span className="text-[#c0c1ff]">'status'</span> =&gt;{" "}
+        <span className="text-[#f0c674]">false</span>,
         {"\n"}
 
-        {"  "}
-        {"}"}
-        {"\n\n"}
-
-        {/* Update */}
-        {"  "}
-        <span className="text-[#4cd7f6]">public function</span>{" "}
-        <span className="text-[#4edea3]">update</span>(
-        EmployeeUpdateRequest $request,
-        Employee $employee
-        ): JsonResponse {"{"}
+        {"        "}
+        <span className="text-[#c0c1ff]">'message'</span> =&gt;{" "}
+        <span className="text-[#c0c1ff]">'Validation failed.'</span>,
         {"\n"}
 
-        {"    "}
-        <span className="text-[#86948a]">
-          // Prevent cross-tenant employee access
-        </span>
+        {"        "}
+        <span className="text-[#c0c1ff]">'errors'</span> =&gt;{" "}
+        $validate-&gt;errors(),
         {"\n"}
 
-        {"    "}
-        <span className="text-[#4cd7f6]">abort_unless</span>(
-        $employee-&gt;tenant_id === $request-&gt;user()-&gt;tenant_id,
-        403
-        );
+        {"      "}]);
+        {"\n"}
+
+        {"    "}{"}"}
         {"\n\n"}
 
         {"    "}
         <span className="text-[#86948a]">
-          // Atomic update
+          // Resolve authenticated employee
         </span>
         {"\n"}
 
-        {"    "}DB::transaction(
-        <span className="text-[#4cd7f6]">function</span> (){" "}
-        <span className="text-[#4cd7f6]">use</span> ($request, $employee) {"{"}
-        {"\n"}
-
-        {"      "}$employee-&gt;update(
-        $request-&gt;validated()
-        );
-        {"\n"}
-
-        {"      "}$employee-&gt;load(
-        <span className="text-[#c0c1ff]">'department:id,name'</span>
-        );
-        {"\n"}
+        {"    "}$employeeId = Auth::user()-&gt;employee-&gt;id;
+        {"\n\n"}
 
         {"    "}
-        {"}"}
-        );
+        <span className="text-[#86948a]">
+          // Load activity and verify assignment
+        </span>
+        {"\n"}
+
+        {"    "}$activity = Activity::with(
+        <span className="text-[#c0c1ff]">'assignedEmployees'</span>
+        )-&gt;find($request-&gt;activityId);
+        {"\n\n"}
+
+        {"    "}$assignedEmployee =
+        $activity-&gt;assignedEmployees()
+        {"\n"}
+
+        {"      "}-&gt;where(
+        <span className="text-[#c0c1ff]">'employee_id'</span>,
+        $employeeId
+        )
+        {"\n"}
+
+        {"      "}-&gt;first();
+        {"\n\n"}
+
+        {"    "}
+        <span className="text-[#4cd7f6]">if</span> (!$assignedEmployee) {"{"}
+        {"\n"}
+
+        {"      "}
+        <span className="text-[#4cd7f6]">return</span>{" "}
+        response()-&gt;json([
+        {"\n"}
+
+        {"        "}
+        <span className="text-[#c0c1ff]">'status'</span> =&gt;{" "}
+        <span className="text-[#f0c674]">false</span>,
+        {"\n"}
+
+        {"        "}
+        <span className="text-[#c0c1ff]">'message'</span> =&gt;{" "}
+        <span className="text-[#c0c1ff]">
+          'You are not assigned to this activity.'
+        </span>
+        ,
+        {"\n"}
+
+        {"      "}]);
+        {"\n"}
+
+        {"    "}{"}"}
+        {"\n\n"}
+
+        {"    "}
+        <span className="text-[#86948a]">
+          // Find active employee activity session
+        </span>
+        {"\n"}
+
+        {"    "}$existing = ActivityLocation::where(
+        <span className="text-[#c0c1ff]">'employee_id'</span>,
+        $employeeId
+        )
+        {"\n"}
+
+        {"      "}-&gt;where(
+        <span className="text-[#c0c1ff]">'activity_id'</span>,
+        $activity-&gt;id
+        )
+        {"\n"}
+
+        {"      "}-&gt;whereNull(
+        <span className="text-[#c0c1ff]">'logout_time'</span>
+        )
+        {"\n"}
+
+        {"      "}-&gt;first();
+        {"\n\n"}
+
+        {"    "}
+        <span className="text-[#4cd7f6]">if</span> ($existing) {"{"}
+        {"\n"}
+
+        {"      "}
+        <span className="text-[#86948a]">
+          // Update or complete existing activity
+        </span>
+        {"\n"}
+
+        {"      "}$existing-&gt;activity_location =
+        $request-&gt;location;
+        {"\n"}
+
+        {"      "}$existing-&gt;employee_activity_status =
+        <span className="text-[#c0c1ff]">'Active'</span>;
+        {"\n"}
+
+        {"      "}$existing-&gt;save();
+        {"\n\n"}
+
+        {"      "}
+        <span className="text-[#4cd7f6]">return</span>{" "}
+        response()-&gt;json([
+        {"\n"}
+
+        {"        "}
+        <span className="text-[#c0c1ff]">'status'</span> =&gt;{" "}
+        <span className="text-[#f0c674]">true</span>,
+        {"\n"}
+
+        {"        "}
+        <span className="text-[#c0c1ff]">'message'</span> =&gt;{" "}
+        <span className="text-[#c0c1ff]">
+          'Activity status updated.'
+        </span>
+        ,
+        {"\n"}
+
+        {"      "}]);
+        {"\n"}
+
+        {"    "}{"}"}
+        {"\n\n"}
+
+        {"    "}
+        <span className="text-[#86948a]">
+          // Create activity tracking record
+        </span>
+        {"\n"}
+
+        {"    "}$activityLocation = new ActivityLocation();
+        {"\n"}
+
+        {"    "}$activityLocation-&gt;employee_id = $employeeId;
+        {"\n"}
+
+        {"    "}$activityLocation-&gt;activity_id = $activity-&gt;id;
+        {"\n"}
+
+        {"    "}$activityLocation-&gt;start_location =
+        $request-&gt;location;
+        {"\n"}
+
+        {"    "}$activityLocation-&gt;login_time = Carbon::now();
+        {"\n"}
+
+        {"    "}$activityLocation-&gt;employee_activity_status =
+        <span className="text-[#c0c1ff]">'Ongoing'</span>;
+        {"\n"}
+
+        {"    "}$activityLocation-&gt;save();
         {"\n\n"}
 
         {"    "}
@@ -1054,24 +1127,22 @@ function LaravelCode() {
         {"\n"}
 
         {"      "}
-        <span className="text-[#c0c1ff]">'data'</span> =&gt;{" "}
-        <span className="text-[#4cd7f6]">new</span>{" "}
-        EmployeeResource($employee),
+        <span className="text-[#c0c1ff]">'status'</span> =&gt;{" "}
+        <span className="text-[#f0c674]">true</span>,
         {"\n"}
 
         {"      "}
         <span className="text-[#c0c1ff]">'message'</span> =&gt;{" "}
         <span className="text-[#c0c1ff]">
-          'Employee updated successfully'
+          'Activity started successfully.'
         </span>
         ,
         {"\n"}
 
-        {"    "});
+        {"    "}]);
         {"\n"}
 
-        {"  "}
-        {"}"}
+        {"  "}{"}"}
         {"\n"}
 
         {"}"}
@@ -1085,7 +1156,7 @@ function TypeScriptCode() {
     <pre>
       <code>
         <span className="text-[#86948a]">
-          // Typed React API layer — Axios + TanStack Query
+          // Typed HR Activity Tracking API — Axios + TanStack Query
         </span>
         {"\n\n"}
 
@@ -1108,9 +1179,73 @@ function TypeScriptCode() {
         <span className="text-[#c0c1ff]">"axios"</span>;
         {"\n\n"}
 
-        {/* Employee type */}
+        {/* Types */}
         <span className="text-[#4cd7f6]">type</span>{" "}
-        <span className="text-[#4edea3]">Employee</span> = {"{"}
+        <span className="text-[#4edea3]">ActivityStatus</span> =
+        {" "}
+        <span className="text-[#c0c1ff]">"NotStarted"</span> |{" "}
+        <span className="text-[#c0c1ff]">"Ongoing"</span> |{" "}
+        <span className="text-[#c0c1ff]">"Active"</span> |{" "}
+        <span className="text-[#c0c1ff]">"Completed"</span>;
+        {"\n\n"}
+
+        <span className="text-[#4cd7f6]">type</span>{" "}
+        <span className="text-[#4edea3]">EmployeeActivity</span> = {"{"}
+        {"\n"}
+
+        {"  "}id: <span className="text-[#4cd7f6]">number</span>;
+        {"\n"}
+
+        {"  "}employee_id:{" "}
+        <span className="text-[#4cd7f6]">number</span>;
+        {"\n"}
+
+        {"  "}employee_name:{" "}
+        <span className="text-[#4cd7f6]">string</span>;
+        {"\n"}
+
+        {"  "}role:{" "}
+        <span className="text-[#c0c1ff]">"Participant"</span> |{" "}
+        <span className="text-[#c0c1ff]">"Driver"</span>;
+        {"\n"}
+
+        {"  "}complete_or_not:{" "}
+        <span className="text-[#4cd7f6]">boolean</span>;
+        {"\n"}
+
+        {"}"} ;
+        {"\n\n"}
+
+        <span className="text-[#4cd7f6]">type</span>{" "}
+        <span className="text-[#4edea3]">ActivityLocation</span> = {"{"}
+        {"\n"}
+
+        {"  "}id: <span className="text-[#4cd7f6]">number</span>;
+        {"\n"}
+
+        {"  "}activity_id:{" "}
+        <span className="text-[#4cd7f6]">number</span>;
+        {"\n"}
+
+        {"  "}location: <span className="text-[#4cd7f6]">string</span>;
+        {"\n"}
+
+        {"  "}status: ActivityStatus;
+        {"\n"}
+
+        {"  "}login_time?:{" "}
+        <span className="text-[#4cd7f6]">string</span>;
+        {"\n"}
+
+        {"  "}logout_time?:{" "}
+        <span className="text-[#4cd7f6]">string</span>;
+        {"\n"}
+
+        {"}"} ;
+        {"\n\n"}
+
+        <span className="text-[#4cd7f6]">type</span>{" "}
+        <span className="text-[#4edea3]">Activity</span> = {"{"}
         {"\n"}
 
         {"  "}id: <span className="text-[#4cd7f6]">number</span>;
@@ -1119,57 +1254,46 @@ function TypeScriptCode() {
         {"  "}name: <span className="text-[#4cd7f6]">string</span>;
         {"\n"}
 
-        {"  "}email: <span className="text-[#4cd7f6]">string</span>;
+        {"  "}description?:{" "}
+        <span className="text-[#4cd7f6]">string</span>;
         {"\n"}
 
-        {"  "}status:
-        <span className="text-[#c0c1ff]"> "active"</span> |{" "}
-        <span className="text-[#c0c1ff]">"inactive"</span>;
+        {"  "}city: <span className="text-[#4cd7f6]">string</span>;
         {"\n"}
 
-        {"  "}department: {"{"}
+        {"  "}progress: ActivityStatus;
         {"\n"}
 
-        {"    "}id: <span className="text-[#4cd7f6]">number</span>;
+        {"  "}employees: EmployeeActivity[];
         {"\n"}
 
-        {"    "}name: <span className="text-[#4cd7f6]">string</span>;
+        {"  "}locations: ActivityLocation[];
         {"\n"}
 
-        {"  "}
-        {"}"};
-        {"\n"}
-
-        {"}"};
+        {"}"} ;
         {"\n\n"}
 
-        {/* Filters */}
+        {/* Request types */}
         <span className="text-[#4cd7f6]">type</span>{" "}
-        <span className="text-[#4edea3]">EmployeeFilters</span> = {"{"}
+        <span className="text-[#4edea3]">LocationPayload</span> = {"{"}
         {"\n"}
 
-        {"  "}search?: <span className="text-[#4cd7f6]">string</span>;
-        {"\n"}
-
-        {"  "}department_id?:{" "}
+        {"  "}activityId:{" "}
         <span className="text-[#4cd7f6]">number</span>;
         {"\n"}
 
-        {"  "}page?: <span className="text-[#4cd7f6]">number</span>;
+        {"  "}location: <span className="text-[#4cd7f6]">string</span>;
         {"\n"}
 
-        {"  "}per_page?: <span className="text-[#4cd7f6]">number</span>;
-        {"\n"}
-
-        {"}"};
+        {"}"} ;
         {"\n\n"}
 
-        {/* Axios */}
+        {/* Axios instance */}
         <span className="text-[#4cd7f6]">const</span> api = axios.create({"{"}
         {"\n"}
 
-        {"  "}baseURL:
-        <span className="text-[#c0c1ff]"> "/api"</span>,
+        {"  "}baseURL:{" "}
+        <span className="text-[#c0c1ff]">"/api"</span>,
         {"\n"}
 
         {"  "}withCredentials:{" "}
@@ -1180,9 +1304,7 @@ function TypeScriptCode() {
         {"\n"}
 
         {"    "}
-        <span className="text-[#c0c1ff]">
-          "Accept"
-        </span>:{" "}
+        <span className="text-[#c0c1ff]">"Accept"</span>:{" "}
         <span className="text-[#c0c1ff]">
           "application/json"
         </span>,
@@ -1192,10 +1314,10 @@ function TypeScriptCode() {
         {"}"},
         {"\n"}
 
-        {"}"});
+        {"}"}); 
         {"\n\n"}
 
-        {/* Interceptor */}
+        {/* Response interceptor */}
         api.interceptors.response.use(
         {"\n"}
 
@@ -1212,7 +1334,7 @@ function TypeScriptCode() {
         {"\n"}
 
         {"      "}window.location.href =
-        <span className="text-[#c0c1ff]"> "/login"</span>;
+        <span className="text-[#c0c1ff]">"/login"</span>;
         {"\n"}
 
         {"    "}
@@ -1231,41 +1353,36 @@ function TypeScriptCode() {
         );
         {"\n\n"}
 
-        {/* API function */}
+        {/* Fetch activity */}
         <span className="text-[#4cd7f6]">const</span>{" "}
-        <span className="text-[#4edea3]">fetchEmployees</span> ={" "}
+        <span className="text-[#4edea3]">fetchActivity</span> ={" "}
         <span className="text-[#4cd7f6]">async</span> (
-        filters: EmployeeFilters
-        ) =&gt; {"{"}
+        activityId: <span className="text-[#4cd7f6]">number</span>
+        ): <span className="text-[#4cd7f6]">Promise</span>
+        &lt;Activity&gt; =&gt; {"{"}
         {"\n"}
 
         {"  "}
         <span className="text-[#4cd7f6]">const</span> {"{"} data {"}"} =
-        <span className="text-[#4cd7f6]"> await</span>{" "}
-        api.get(
-        <span className="text-[#c0c1ff]">"/employees"</span>,
-        {"{"}
-        {"\n"}
-
-        {"    "}params: filters,
-        {"\n"}
-
-        {"  "}
-        {"}"}
+        <span className="text-[#4cd7f6]"> await</span> api.get
+        &lt;Activity&gt;(
+        <span className="text-[#c0c1ff]">
+          `/activities/${"{"}activityId{"}"}`
+        </span>
         );
         {"\n\n"}
 
         {"  "}
-        <span className="text-[#4cd7f6]">return</span> data;
+        <span className="text-[#4cd7f6]">return</span> data.data;
         {"\n"}
 
-        {"}"};
+        {"}"} ;
         {"\n\n"}
 
-        {/* Query hook */}
+        {/* Activity query */}
         <span className="text-[#4cd7f6]">export function</span>{" "}
-        <span className="text-[#4edea3]">useEmployees</span>(
-        filters: EmployeeFilters
+        <span className="text-[#4edea3]">useActivity</span>(
+        activityId: <span className="text-[#4cd7f6]">number</span>
         ) {"{"}
         {"\n"}
 
@@ -1275,12 +1392,15 @@ function TypeScriptCode() {
         {"\n"}
 
         {"    "}queryKey: [
-        <span className="text-[#c0c1ff]">"employees"</span>,
-        filters
+        <span className="text-[#c0c1ff]">"activity"</span>,
+        activityId
         ],
         {"\n"}
 
-        {"    "}queryFn: () =&gt; fetchEmployees(filters),
+        {"    "}queryFn: () =&gt; fetchActivity(activityId),
+        {"\n"}
+
+        {"    "}enabled: Boolean(activityId),
         {"\n"}
 
         {"    "}staleTime: 30_000,
@@ -1293,13 +1413,43 @@ function TypeScriptCode() {
         {"}"});
         {"\n"}
 
-        {"}"}
+        {"}"} ;
+        {"\n\n"}
+
+        {/* Add location API */}
+        <span className="text-[#4cd7f6]">const</span>{" "}
+        <span className="text-[#4edea3]">addActivityLocation</span> =
+        <span className="text-[#4cd7f6]"> async</span> (
+        payload: LocationPayload
+        ) =&gt; {"{"}
+        {"\n"}
+
+        {"  "}
+        <span className="text-[#4cd7f6]">const</span> {"{"} data {"}"} =
+        <span className="text-[#4cd7f6]"> await</span> api.post(
+        <span className="text-[#c0c1ff]">
+          "/activities/location"
+        </span>
+        ,
+        {"\n"}
+
+        {"    "}payload
+        {"\n"}
+
+        {"  "});
+        {"\n\n"}
+
+        {"  "}
+        <span className="text-[#4cd7f6]">return</span> data.data;
+        {"\n"}
+
+        {"}"} ;
         {"\n\n"}
 
         {/* Mutation */}
         <span className="text-[#4cd7f6]">export function</span>{" "}
         <span className="text-[#4edea3]">
-          useUpdateEmployee
+          useAddActivityLocation
         </span>
         () {"{"}
         {"\n"}
@@ -1314,29 +1464,10 @@ function TypeScriptCode() {
         useMutation({"{"}
         {"\n"}
 
-        {"    "}mutationFn: (
-        {"{"}
-        {"\n"}
-
-        {"      "}id:
-        <span className="text-[#4cd7f6]"> number</span>;
-        {"\n"}
-
-        {"      "}payload: Partial&lt;Employee&gt;;
-        {"\n"}
-
-        {"    "}
-        {"}"}
-        ) =&gt; api.put(
-        <span className="text-[#c0c1ff]">
-          `/employees/${"{"}id{"}"}`
-        </span>
-        ,
-        payload
-        ),
+        {"    "}mutationFn: addActivityLocation,
         {"\n\n"}
 
-        {"    "}onSuccess: () =&gt; {"{"}
+        {"    "}onSuccess: (_data, variables) =&gt; {"{"}
         {"\n"}
 
         {"      "}queryClient.invalidateQueries(
@@ -1344,9 +1475,8 @@ function TypeScriptCode() {
         {"\n"}
 
         {"        "}queryKey: [
-        <span className="text-[#c0c1ff]">
-          "employees"
-        </span>
+        <span className="text-[#c0c1ff]">"activity"</span>,
+        variables.activityId
         ],
         {"\n"}
 
@@ -1359,11 +1489,10 @@ function TypeScriptCode() {
         {"}"}
         {"\n"}
 
-        {"  "}
-        {"}"});
+        {"  "});
         {"\n"}
 
-        {"}"}
+        {"}"} ;
       </code>
     </pre>
   );
@@ -1371,11 +1500,11 @@ function TypeScriptCode() {
 
 function Contact() {
   const [loading,setLoading] = useState(false);
-  const onSubmit = async (event:any) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
     try {
-      const formData = new FormData(event.target);
+      const formData = new FormData(event.currentTarget);
       formData.append("access_key", "a3a9b8d9-6a2d-428a-9202-b8b45ea1e9b0");
 
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -1386,7 +1515,7 @@ function Contact() {
       const data = await response.json();
       if (data.success) {
         toast.success("Form Submitted Successfully");
-        event.target.reset();
+        event.currentTarget.reset();
       } else {
         toast.error("Something went wrong.");
       }
@@ -1516,22 +1645,22 @@ function Contact() {
                 </div>
               </form>
             </div>
-            <div className="mt-6 flex items-center justify-between rounded-xl bg-[#1c1f29] p-4">
-                <div className="flex items-center gap-3">
+            <div className="mt-6 flex flex-col gap-3 rounded-xl bg-[#1c1f29] p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 items-center gap-3">
                   <Icon className="text-[#4edea3]">public</Icon>
 
-                  <div>
+                  <div className="min-w-0">
                     <span className="block font-[Space_Grotesk] font-semibold text-[#dfe2ef]">
                       Dubai, UAE
                     </span>
 
-                    <span className="font-mono text-[10px] text-[#86948a]">
+                    <span className="block font-mono text-[10px] text-[#86948a]">
                       Open to UAE, Global & Remote Opportunities
                     </span>
                   </div>
                 </div>
 
-                <span className="rounded bg-[#4edea3]/10 px-2 py-1 font-mono text-[10px] font-bold text-[#4edea3]">
+                <span className="w-fit rounded bg-[#4edea3]/10 px-2 py-1 font-mono text-[10px] font-bold text-[#4edea3]">
                   AVAILABLE
                 </span>
             </div>
@@ -1558,18 +1687,18 @@ function ContactLink({
       href={href}
       target={href.startsWith("http") ? "_blank" : undefined}
       rel={href.startsWith("http") ? "noreferrer" : undefined}
-      className="flex items-center gap-3 rounded-xl bg-[#1c1f29] p-3.5 text-[#dfe2ef] transition hover:bg-[#262a34]"
+      className="flex min-w-0 items-center gap-3 rounded-xl bg-[#1c1f29] p-3.5 text-[#dfe2ef] transition hover:bg-[#262a34]"
     >
-      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#4edea3]/10 text-[#4edea3]">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#4edea3]/10 text-[#4edea3]">
         <Icon className="text-[20px]">{icon}</Icon>
       </div>
 
-      <div>
+      <div className="min-w-0">
         <span className="block font-mono text-[10px] text-[#86948a]">
           {label}
         </span>
 
-        <span className="text-sm font-medium">{value}</span>
+        <span className="block wrap-break-words text-sm font-medium">{value}</span>
       </div>
     </a>
   );
