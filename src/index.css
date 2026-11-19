@@ -53,3 +53,115 @@ pre,
   background: #10b981;
   color: #002113;
 }
+
+
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-surface: var(--surface);
+  --color-surface-high: var(--surface-high);
+  --color-brand-cyan: var(--brand-cyan);
+  --color-brand-lilac: var(--brand-lilac);
+  --font-display: "Space Grotesk", sans-serif;
+  --font-sans: "Geist", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+:root {
+  --radius: 0.75rem;
+  --background: oklch(0.18 0.018 265);
+  --foreground: oklch(0.91 0.015 265);
+  --card: oklch(0.215 0.02 265);
+  --card-foreground: oklch(0.91 0.015 265);
+  --popover: oklch(0.215 0.02 265);
+  --popover-foreground: oklch(0.91 0.015 265);
+  --primary: oklch(0.82 0.15 163);
+  --primary-foreground: oklch(0.2 0.05 163);
+  --secondary: oklch(0.27 0.02 265);
+  --secondary-foreground: oklch(0.91 0.015 265);
+  --muted: oklch(0.24 0.02 265);
+  --muted-foreground: oklch(0.64 0.03 160);
+  --accent: oklch(0.27 0.02 265);
+  --accent-foreground: oklch(0.91 0.015 265);
+  --destructive: oklch(0.8 0.1 25);
+  --destructive-foreground: oklch(0.2 0.05 25);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.82 0.15 163);
+  --surface: oklch(0.155 0.016 265);
+  --surface-high: oklch(0.235 0.02 265);
+  --brand-cyan: oklch(0.82 0.13 215);
+  --brand-lilac: oklch(0.83 0.09 280);
+  --gradient-brand: linear-gradient(135deg, oklch(0.7 0.15 163), oklch(0.82 0.13 215));
+  --shadow-glow: 0 20px 60px -20px color-mix(in oklab, var(--primary) 45%, transparent);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+  h1, h2, h3, p { font-family: var(--font-display); }
+  code, pre, .font-mono { font-family: var(--font-mono); }
+  ::selection { background: var(--primary); color: var(--primary-foreground); }
+}
+
+.material-symbols-outlined {
+  display: inline-flex; align-items: center; justify-content: center;
+  max-width: 1em; overflow: hidden; direction: ltr;
+  font-family: "Material Symbols Outlined"; font-feature-settings: "liga";
+  font-style: normal; font-weight: 400; line-height: 1;
+  text-transform: none; white-space: nowrap;
+}
+::-webkit-scrollbar { display: none; }
+
+@utility bg-gradient-brand { background-image: var(--gradient-brand); }
+@utility shadow-glow { box-shadow: var(--shadow-glow); }
