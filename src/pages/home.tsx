@@ -141,6 +141,7 @@ const techGroups = [
       ["PHP", "Advanced"],
       ["Node.js", "Advanced"],
       ["Express.js", "Advanced"],
+      ["Nest.js", "Advanced"],
       ["Django", "Working"],
       ["REST APIs", "Advanced"],
     ],
